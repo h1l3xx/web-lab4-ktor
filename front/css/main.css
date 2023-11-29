@@ -1,0 +1,60 @@
+@font-face {
+    font-family: "sans-serif";
+}
+*{
+    font-family: 'Arial', fantasy;
+    font-size: 27px;
+}
+
+body {
+    width: 100%;
+    margin: 0 auto;
+    background-color: #605CB1;
+    color: #91FD7E;
+}
+header{
+    font-family: serif;
+    color: #91FD7E;
+    text-align: center;
+}
+.container {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sign_in{
+    margin-top: 10%;
+    text-align: center;
+}
+input{
+    margin-bottom: 25px;
+    margin-top: 25px;
+    border: 2px #605CB1 solid;
+    border-radius: 15px;
+}
+#login{
+    text-align: center;
+    color: grey;
+}
+button{
+    padding: 12px;
+    background: #605CB1;
+    border: 2px #91FD7E solid;
+    border-radius: 27px;
+    color: #91FD7E;
+    margin-bottom: 25px;
+}
+button:hover{
+    padding: 12px;
+    background: #91FD7E;
+    border: 2px #605CB1 solid;
+    border-radius: 27px;
+    color: #605CB1;
+    margin-bottom: 25px;
+
+}
+.link{
+    text-decoration: none;
+    color: #91FD7E;
+}
