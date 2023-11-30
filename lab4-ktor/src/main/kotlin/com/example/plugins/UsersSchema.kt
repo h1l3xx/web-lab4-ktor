@@ -14,6 +14,7 @@ import org.jetbrains.exposed.sql.*
 class UserService(private val database: Database) {
     object Users : Table() {
         val id = integer("id").autoIncrement()
+        val surname = varchar("surname", length = 50)
         val name = varchar("name", length = 50)
         val birthday = varchar("birthday", length = 25)
         val email = varchar("email", length = 25)
@@ -32,15 +33,39 @@ class UserService(private val database: Database) {
     suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    suspend fun create(user: UserDto): String = dbQuery {
-        val user_id = Users.insert {
-            it[name] = user.name
-            it[birthday] = user.birthday
-            it[email] = user.email
-            it[login] = user.login
-            it[password] = hash(user.password)
-        }[Users.id]
-        JwtConfig.instance.createAccessToken(user_id)
+    suspend fun create(user: UserDto): AuthResultDto {
+        val exists = dbQuery {
+            Users.select(Users.login eq user.login).singleOrNull()
+        }
+        if (exists != null){
+           return AuthResultDto(
+               false,
+               ErrorDto(
+                   423,
+                   "Bad Login",
+                   "User with this login already exists"
+               ),
+               null,
+               null
+           )
+        }else{
+            val user_id = dbQuery { Users.insert {
+                it[name] = user.name
+                it[surname] = user.surname
+                it[birthday] = user.birthday
+                it[email] = user.email
+                it[login] = user.login
+                it[password] = hash(user.password)
+            }[Users.id]
+            }
+            val token = JwtConfig.instance.createAccessToken(user_id)
+            return AuthResultDto(
+                true,
+                null,
+                token,
+                user_id
+            )
+        }
     }
 
     suspend fun auth(auth : AuthDto) : AuthResultDto{
@@ -95,7 +120,7 @@ class UserService(private val database: Database) {
     suspend fun read(id: Int): UserDto? {
         return dbQuery {
             Users.select { Users.id eq id }
-                .map { UserDto( it[Users.email], it[Users.name], it[Users.birthday], it[Users.login], it[Users.password]) }
+                .map { UserDto( it[Users.email], it[Users.name], it[Users.surname], it[Users.birthday], it[Users.login], it[Users.password]) }
                 .singleOrNull()
         }
     }

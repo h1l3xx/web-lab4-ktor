@@ -67,7 +67,7 @@ class ResultsService(private val database: Database) {
 
     suspend fun getByUserId(id: Int): List<ResultDto> {
         return dbQuery {
-            Results.select { Results.id eq id }
+            Results.select { Results.owner eq id }
                 .map { ResultDto(
                     it[Results.x],
                     it[Results.y],
