@@ -27,7 +27,7 @@ fun Application.module() {
 
     configureSecurity()
     configureSerialization()
-//    configureSockets()
+    configureSockets()
     configureDatabases(userService, resultsService)
     authRoutes(userService)
 

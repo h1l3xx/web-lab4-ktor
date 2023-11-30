@@ -59,6 +59,11 @@ fun Application.configureDatabases(userService: UserService, resultsService: Res
                     val results = resultsService.getByUserId(id)
                     call.respond(HttpStatusCode.OK, results)
                 }
+                delete("/user/{id}"){
+                    val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")
+                    resultsService.deleteByUserId(id)
+                    call.respond(HttpStatusCode.OK)
+                }
             }
         }
     }

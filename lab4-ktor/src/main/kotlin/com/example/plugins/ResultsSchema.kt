@@ -85,4 +85,9 @@ class ResultsService(private val database: Database) {
             Results.deleteWhere { Results.id.eq(id) }
         }
     }
+    suspend fun deleteByUserId(userId : Int){
+        dbQuery {
+            Results.deleteWhere { Results.owner.eq(userId) }
+        }
+    }
 }
