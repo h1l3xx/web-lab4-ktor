@@ -1,11 +1,11 @@
-package com.example.plugins
+package com.example.database
 
 import com.example.dto.AuthDto
 import com.example.dto.AuthResultDto
 import com.example.dto.ErrorDto
 import com.example.dto.UserDto
-import com.example.security.JwtConfig
-import com.example.security.hash
+import com.example.security.jwt.JwtConfig
+import com.example.security.jwt.hash
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
@@ -70,7 +70,8 @@ class UserService(database: Database) {
 
     suspend fun auth(auth : AuthDto) : AuthResultDto{
         val user = dbQuery {
-            Users.select (Users.login eq auth.login
+            Users.select (
+                Users.login eq auth.login
          ).map {
             it[Users.id]
         }.singleOrNull()

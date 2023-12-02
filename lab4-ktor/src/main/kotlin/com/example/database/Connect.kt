@@ -1,4 +1,4 @@
-package com.example.plugins
+package com.example.database
 
 import org.jetbrains.exposed.sql.Database
 

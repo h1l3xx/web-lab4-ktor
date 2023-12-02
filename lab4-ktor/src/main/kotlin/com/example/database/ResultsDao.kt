@@ -1,4 +1,4 @@
-package com.example.plugins
+package com.example.database
 
 import com.example.dto.ResultDto
 import org.jetbrains.exposed.sql.transactions.transaction

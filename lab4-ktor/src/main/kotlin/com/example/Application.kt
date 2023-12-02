@@ -1,6 +1,8 @@
 package com.example
 
+import com.example.database.*
 import com.example.plugins.*
+import com.example.security.auth.authRoutes
 import com.example.security.configureSecurity
 import io.ktor.http.*
 import io.ktor.server.application.*

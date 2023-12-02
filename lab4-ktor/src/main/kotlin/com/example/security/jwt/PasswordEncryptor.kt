@@ -1,4 +1,4 @@
-package com.example.security
+package com.example.security.jwt
 
 import io.ktor.util.*
 import javax.crypto.Mac

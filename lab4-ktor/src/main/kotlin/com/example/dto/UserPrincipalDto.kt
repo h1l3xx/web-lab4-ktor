@@ -1,7 +1,7 @@
-package com.example.security
+package com.example.dto
 
 import io.ktor.server.auth.*
 
-data class UserPrincipal(
+data class UserPrincipalDto(
     val id : Int
 ) : Principal

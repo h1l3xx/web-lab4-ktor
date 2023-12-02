@@ -1,4 +1,4 @@
-package com.example.plugins
+package com.example.database
 
 import com.example.dto.DotDto
 import com.example.dto.ResultDto

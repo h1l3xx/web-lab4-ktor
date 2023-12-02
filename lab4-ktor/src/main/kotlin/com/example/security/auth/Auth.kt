@@ -1,5 +1,6 @@
-package com.example.plugins
+package com.example.security.auth
 
+import com.example.database.UserService
 import com.example.dto.AuthDto
 import com.example.dto.UserDto
 import io.ktor.http.*
