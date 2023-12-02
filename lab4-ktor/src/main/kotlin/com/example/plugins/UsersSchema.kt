@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
-class UserService(private val database: Database) {
+class UserService(database: Database) {
     object Users : Table() {
         val id = integer("id").autoIncrement()
         val surname = varchar("surname", length = 50)
@@ -30,7 +30,7 @@ class UserService(private val database: Database) {
         }
     }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
+    private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
     suspend fun create(user: UserDto): AuthResultDto {
@@ -49,7 +49,7 @@ class UserService(private val database: Database) {
                null
            )
         }else{
-            val user_id = dbQuery { Users.insert {
+            val userId = dbQuery { Users.insert {
                 it[name] = user.name
                 it[surname] = user.surname
                 it[birthday] = user.birthday
@@ -58,12 +58,12 @@ class UserService(private val database: Database) {
                 it[password] = hash(user.password)
             }[Users.id]
             }
-            val token = JwtConfig.instance.createAccessToken(user_id)
+            val token = JwtConfig.instance.createAccessToken(userId)
             return AuthResultDto(
                 true,
                 null,
                 token,
-                user_id
+                userId
             )
         }
     }
@@ -80,7 +80,7 @@ class UserService(private val database: Database) {
                 false,
                 ErrorDto(
                     401,
-                    "Unauth",
+                    "Bad Data",
                     "Invalid login or password "
                 ),
                 null,
@@ -107,7 +107,7 @@ class UserService(private val database: Database) {
                     false,
                     ErrorDto(
                         401,
-                        "Unauth",
+                        "Bad Data",
                         "Invalid login or password "
                     ),
                     null,

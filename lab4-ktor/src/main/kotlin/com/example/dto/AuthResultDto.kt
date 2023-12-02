@@ -8,5 +8,4 @@ data class AuthResultDto (
     val error: ErrorDto?,
     val token : String?,
     val id : Int?
-) {
-}
+)

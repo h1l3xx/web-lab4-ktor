@@ -1,13 +1,12 @@
 package com.example.security
 
 import io.ktor.util.*
-import java.nio.charset.Charset
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
-private val SECRET_KEY = "2468571396584126483682751223365669522586339325"
+private const val SECRET_KEY = "2468571396584126483682751223365669522586339325"
 
-private val ALG = "HmacSHA1"
+private const val ALG = "HmacSHA1"
 
 private val HASH_KEY = hex(SECRET_KEY)
 
