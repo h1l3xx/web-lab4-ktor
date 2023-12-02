@@ -5,6 +5,6 @@ data class CacheResultDto(
     val y : Double,
     val r : Double,
     val result : Boolean,
-    val time : Long?,
-    val id : Int?
+    val id : Int?,
+    val time : Long?
 )

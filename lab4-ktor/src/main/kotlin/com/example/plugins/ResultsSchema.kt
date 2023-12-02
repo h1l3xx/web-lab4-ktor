@@ -14,6 +14,7 @@ class ResultsService(database: Database) {
         val y = double("y")
         val r = double("r")
         val Result = bool("result")
+        val time = varchar("time", length = 60)
 
         override val primaryKey = PrimaryKey(id)
     }
@@ -35,6 +36,7 @@ class ResultsService(database: Database) {
                 it[r] = result.r
                 it[Result] = result.result
                 it[owner] = result.ownerId
+                it[time] = result.time
             }
         }[Results.id]
         if (!cache){
@@ -60,7 +62,7 @@ class ResultsService(database: Database) {
                     it[Results.r],
                     it[Results.owner],
                     it[Results.Result],
-                    null
+                    it[Results.time]
                 ) }
         }
     }

@@ -2,6 +2,7 @@ package com.example.utils
 
 import com.example.dto.DotDto
 import com.example.dto.ResultDto
+import java.time.LocalDateTime
 import kotlin.math.abs
 
 class Checker {
@@ -17,7 +18,7 @@ class Checker {
                     r,
                     dot.id,
                     false,
-                    null
+                    LocalDateTime.now().toString()
                 )
             }
             else -> {
@@ -29,7 +30,7 @@ class Checker {
                             r,
                             dot.id,
                             checkFirst(x, y, r),
-                            null
+                            LocalDateTime.now().toString()
                         )
                     } else if (x <= 0 && y <=0){
                         return ResultDto(
@@ -38,7 +39,7 @@ class Checker {
                             r,
                             dot.id,
                             checkThird(x, y, r),
-                            null
+                            LocalDateTime.now().toString()
                         )
                     } else if (x<=0 && y>=0){
                         return ResultDto(
@@ -47,7 +48,7 @@ class Checker {
                             r,
                             dot.id,
                             checkSecond(x, y, r),
-                            null
+                            LocalDateTime.now().toString()
                         )
                     }else{
                         return ResultDto(
@@ -56,7 +57,7 @@ class Checker {
                             r,
                             dot.id,
                             false,
-                            null
+                            LocalDateTime.now().toString()
                         )
                     }
                 }
@@ -68,7 +69,7 @@ class Checker {
                             r,
                             dot.id,
                             checkThird(x, y, r),
-                            null
+                            LocalDateTime.now().toString()
                         )
                     } else if (x <= 0 && y <=0){
                         return ResultDto(
@@ -77,7 +78,7 @@ class Checker {
                             r,
                             dot.id,
                             checkFirst(x, y, r),
-                            null
+                            LocalDateTime.now().toString()
                         )
                     } else if (x<=0 && y>=0){
                         return ResultDto(
@@ -86,7 +87,7 @@ class Checker {
                             r,
                             dot.id,
                             false,
-                            null
+                            LocalDateTime.now().toString()
                         )
                     }else{
                         return ResultDto(
@@ -95,7 +96,7 @@ class Checker {
                             r,
                             dot.id,
                             checkSecond(x, y, r),
-                            null
+                            LocalDateTime.now().toString()
                         )
                     }
                 }

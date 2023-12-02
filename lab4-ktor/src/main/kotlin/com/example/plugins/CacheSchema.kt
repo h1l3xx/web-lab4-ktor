@@ -18,7 +18,6 @@ class CacheService(database: Database) {
         val r = double("r")
         val Result = bool("result")
         val createAt = long("create at")
-
         override val primaryKey = PrimaryKey(id)
     }
 
@@ -37,8 +36,8 @@ class CacheService(database: Database) {
                     it[Cache.y],
                     it[Cache.r],
                     it[Cache.Result],
-                    it[Cache.createAt],
-                    it[Cache.id]
+                    it[Cache.id],
+                    it[Cache.createAt]
                 )
             }
         }
@@ -55,14 +54,14 @@ class CacheService(database: Database) {
 
     suspend fun readByDot(dot : DotDto) : CacheSelectResultDto{
         val result = dbQuery {
-            Cache.slice(Cache.x, Cache.y, Cache.r, Cache.Result).selectAll().map {
+            Cache.slice(Cache.x, Cache.y, Cache.r, Cache.Result, Cache.id).selectAll().map {
                 CacheResultDto(
                     it[Cache.x],
                     it[Cache.y],
                     it[Cache.r],
                     it[Cache.Result],
-                    null,
-                    it[Cache.id]
+                    it[Cache.id],
+                    null
                 )
             }
         }

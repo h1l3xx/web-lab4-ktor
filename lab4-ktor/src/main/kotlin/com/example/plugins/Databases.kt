@@ -10,6 +10,7 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.time.LocalDateTime
 
 fun Application.configureDatabases(userService: UserService, resultsService: ResultsService, cacheService: CacheService) {
 
@@ -60,7 +61,7 @@ fun Application.configureDatabases(userService: UserService, resultsService: Res
                             dot.r,
                             dot.id,
                             cache.resultOfShoot!!,
-                            null
+                            LocalDateTime.now().toString()
                         )
                         call.respond(HttpStatusCode.Created, result)
                         resultsService.create(result, true)

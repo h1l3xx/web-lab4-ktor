@@ -9,5 +9,5 @@ data class ResultDto(
     val r: Double,
     val ownerId: Int,
     val result: Boolean,
-    val execTimeInMicroSec: Int?
+    val time: String
 )
