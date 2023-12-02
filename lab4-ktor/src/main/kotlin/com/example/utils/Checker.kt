@@ -1,9 +1,7 @@
 package com.example.utils
 
 import com.example.dto.DotDto
-import com.example.dto.ErrorDto
 import com.example.dto.ResultDto
-import io.ktor.server.application.*
 import kotlin.math.abs
 
 class Checker {
@@ -19,7 +17,6 @@ class Checker {
                     r,
                     dot.id,
                     false,
-                    null,
                     null
                 )
             }
@@ -32,7 +29,6 @@ class Checker {
                             r,
                             dot.id,
                             checkFirst(x, y, r),
-                            null,
                             null
                         )
                     } else if (x <= 0 && y <=0){
@@ -42,7 +38,6 @@ class Checker {
                             r,
                             dot.id,
                             checkThird(x, y, r),
-                            null,
                             null
                         )
                     } else if (x<=0 && y>=0){
@@ -52,7 +47,6 @@ class Checker {
                             r,
                             dot.id,
                             checkSecond(x, y, r),
-                            null,
                             null
                         )
                     }else{
@@ -61,8 +55,7 @@ class Checker {
                             y,
                             r,
                             dot.id,
-                            checkFourth(x, y, r),
-                            null,
+                            false,
                             null
                         )
                     }
@@ -75,7 +68,6 @@ class Checker {
                             r,
                             dot.id,
                             checkThird(x, y, r),
-                            null,
                             null
                         )
                     } else if (x <= 0 && y <=0){
@@ -85,7 +77,6 @@ class Checker {
                             r,
                             dot.id,
                             checkFirst(x, y, r),
-                            null,
                             null
                         )
                     } else if (x<=0 && y>=0){
@@ -95,7 +86,6 @@ class Checker {
                             r,
                             dot.id,
                             false,
-                            null,
                             null
                         )
                     }else{
@@ -105,7 +95,6 @@ class Checker {
                             r,
                             dot.id,
                             checkSecond(x, y, r),
-                            null,
                             null
                         )
                     }
@@ -126,8 +115,5 @@ class Checker {
     }
     private fun checkThird(x : Double, y : Double, r : Double) : Boolean{
         return (x*x + y*y <= (r/2)*(r/2))
-    }
-    private fun checkFourth(x : Double, y : Double, r : Double) : Boolean{
-        return false
     }
 }

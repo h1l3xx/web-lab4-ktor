@@ -10,9 +10,8 @@ import io.ktor.server.auth.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import org.jetbrains.exposed.sql.*
 
-fun Application.configureDatabases(userService: UserService, resultsService: ResultsService) {
+fun Application.configureDatabases(userService: UserService, resultsService: ResultsService, cacheService: CacheService) {
 
     val checker = Checker()
 
@@ -49,10 +48,30 @@ fun Application.configureDatabases(userService: UserService, resultsService: Res
         authenticate {
             route("/results"){
                 post("/check"){
+
                     val dot = call.receive<DotDto>()
-                    val result = checker.post(dot)
-                    resultsService.create(result)
-                    call.respond(HttpStatusCode.Created, result)
+                    val cache = cacheService.readByDot(dot)
+                    if (cache.result){
+                        println("Это есть в кеше")
+                        cacheService.update(cache.id!!, System.currentTimeMillis())
+                        val result = ResultDto(
+                            dot.x,
+                            dot.y,
+                            dot.r,
+                            dot.id,
+                            cache.resultOfShoot!!,
+                            null
+                        )
+                        call.respond(HttpStatusCode.Created, result)
+                        resultsService.create(result, true)
+                    }else {
+                        println("Этого нет в кеше")
+                        val result = checker.post(dot)
+                        resultsService.create(result, false)
+
+                        call.respond(HttpStatusCode.Created, result)
+
+                    }
                 }
                 get("/user/{id}"){
                     val id = call.parameters["id"]?.toInt() ?: throw IllegalArgumentException("Invalid ID")

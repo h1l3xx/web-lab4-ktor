@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransacti
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import kotlinx.coroutines.Dispatchers
 import org.jetbrains.exposed.sql.*
-class ResultsService(private val database: Database) {
+class ResultsService(database: Database) {
     object Results : Table() {
         val id = integer("id").autoIncrement()
         val owner = reference("owner_id", UserService.Users.id)
@@ -24,45 +24,31 @@ class ResultsService(private val database: Database) {
         }
     }
 
-    suspend fun <T> dbQuery(block: suspend () -> T): T =
+    private suspend fun <T> dbQuery(block: suspend () -> T): T =
         newSuspendedTransaction(Dispatchers.IO) { block() }
 
-    suspend fun create(result: ResultDto): Int = dbQuery {
-        Results.insert {
-            it[x] = result.x
-            it[y] = result.y
-            it[r] = result.r
-            it[Result] = result.result
-            it[owner] = result.ownerId
-        }[Results.id]
-    }
-
-    suspend fun read(id: Int): ResultDto? {
-        return dbQuery {
-            Results.select { Results.id eq id }
-                .map { ResultDto(
-                    it[Results.x],
-                    it[Results.y],
-                    it[Results.r],
-                    it[Results.owner],
-                    it[Results.Result],
-                    null,
-                    null
-                    ) }
-                .singleOrNull()
-        }
-    }
-
-    suspend fun update(id: Int, result: ResultDto) {
-        dbQuery {
-            Results.update({ Results.id eq id }) {
+    suspend fun create(result: ResultDto, cache : Boolean): Int = dbQuery {
+        val id = dbQuery {
+            Results.insert {
                 it[x] = result.x
                 it[y] = result.y
                 it[r] = result.r
                 it[Result] = result.result
                 it[owner] = result.ownerId
             }
+        }[Results.id]
+        if (!cache){
+            dbQuery {
+                CacheService.Cache.insert {
+                    it[x] = result.x
+                    it[y] = result.y
+                    it[r] = result.r
+                    it[Result] = result.result
+                    it[createAt] = System.currentTimeMillis()
+                }
+            }
         }
+        return@dbQuery id
     }
 
     suspend fun getByUserId(id: Int): List<ResultDto> {
@@ -74,20 +60,13 @@ class ResultsService(private val database: Database) {
                     it[Results.r],
                     it[Results.owner],
                     it[Results.Result],
-                    null,
                     null
                 ) }
         }
     }
-
-    suspend fun delete(id: Int) {
-        dbQuery {
-            Results.deleteWhere { Results.id.eq(id) }
-        }
-    }
     suspend fun deleteByUserId(userId : Int){
         dbQuery {
-            Results.deleteWhere { Results.owner.eq(userId) }
+            Results.deleteWhere { owner.eq(userId) }
         }
     }
 }
