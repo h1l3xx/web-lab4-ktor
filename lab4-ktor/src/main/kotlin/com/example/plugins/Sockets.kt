@@ -7,6 +7,8 @@ import io.ktor.websocket.*
 import java.time.Duration
 
 fun Application.configureSockets() {
+    val sessions = mutableMapOf<Int, DefaultWebSocketServerSession>()
+
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(15)
         timeout = Duration.ofSeconds(15)
@@ -15,13 +17,27 @@ fun Application.configureSockets() {
     }
     routing {
         webSocket("/ws") {
-            for (frame in incoming) {
+            for (frame in incoming){
+                var message = ""
                 if (frame is Frame.Text) {
-                    val text = frame.readText()
-                    println(text)
-                    outgoing.send(Frame.Text("YOU SAID: $text"))
-                    if (text.equals("bye", ignoreCase = true)) {
-                        close(CloseReason(CloseReason.Codes.NORMAL, "Client said BYE"))
+                    message = frame.readText()
+                }
+                println(message)
+                val words = message.split(" ")
+                val id = words[0].toInt()
+                if (!sessions.containsKey(id)){
+                    sessions[id] = this
+                    println(sessions)
+                    outgoing.send(Frame.Text("connected"))
+                }else{
+                    if (sessions.containsKey(id) && words[1] == "connect"){
+                        val oldUser = sessions[id]!!
+                        oldUser.close()
+                        sessions[id] = this
+                        println(sessions)
+                        outgoing.send(Frame.Text("connected"))
+                    }else{
+                        outgoing.send(Frame.Text("yes"))
                     }
                 }
             }
