@@ -4,11 +4,10 @@ import com.example.database.*
 import com.example.plugins.*
 import com.example.security.auth.authRoutes
 import com.example.security.configureSecurity
-import io.ktor.http.*
+import com.example.security.cors.configureCORS
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.netty.*
-import io.ktor.server.plugins.cors.routing.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -18,7 +17,7 @@ object Const{
 }
 fun main() {
 
-    embeddedServer(Netty, port = 8080, host = "localhost", module = Application::module)
+    embeddedServer(Netty, port = 8090, host = "0.0.0.0", module = Application::module)
         .start(wait = true)
 }
 
@@ -35,18 +34,7 @@ fun Application.module() {
     configureSockets()
     configureDatabases(userService, resultsService, cacheService)
     authRoutes(userService)
-
-    install(CORS) {
-        // The methods for your server routes
-        allowMethod(HttpMethod.Get)
-        allowMethod(HttpMethod.Post)
-        allowMethod(HttpMethod.Delete)
-        allowHeader(HttpHeaders.Authorization)
-        allowHeader(HttpHeaders.ContentType)
-        allowCredentials = true
-        allowNonSimpleContentTypes = true
-        anyHost()
-    }
+    configureCORS()
     launch {
         while (true){
             delay(Const.DELAY)

@@ -22,7 +22,7 @@ fun Application.configureSockets() {
                 if (frame is Frame.Text) {
                     message = frame.readText()
                 }
-                println(message)
+                println("message : $message")
                 val words = message.split(" ")
                 val id = words[0].toInt()
                 if (!sessions.containsKey(id)){
